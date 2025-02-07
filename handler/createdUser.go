@@ -3,6 +3,7 @@ package handler
 import (
 	"net/http"
 
+	"github.com/Andesson/marketplace-auth-service/dto"
 	"github.com/Andesson/marketplace-auth-service/hook"
 	"github.com/Andesson/marketplace-auth-service/model"
 	"github.com/gin-gonic/gin"
@@ -28,7 +29,7 @@ func CreateUserHandler(ctx *gin.Context) {
 	}
 
 	logger.Infof("🔐 Gerando hash da senha...")
-	passwordHash, salt, err := HashPassword(request.Password)
+	passwordHash, salt, err := hashPassword(request.Password)
 	if err != nil {
 		logger.Errorf("❌ Erro ao gerar hash da senha: %v", err)
 		sendError(ctx, http.StatusInternalServerError, "Erro ao processar senha")
@@ -69,11 +70,17 @@ func CreateUserHandler(ctx *gin.Context) {
 	}
 	logger.Infof("✅ Credenciais criadas com sucesso.")
 
-	sendCreatedSucess(ctx, "create-user", user)
+	userResponse := dto.UserResponse{
+		Email:     user.Email,
+		FullName:  user.FullName,
+		CreatedAt: user.CreatedAt,
+	}
+
+	sendCreatedSucess(ctx, "create-user", userResponse)
 	logger.Infof("🎉 Usuário criado com sucesso e retornado para o cliente.")
 }
 
-func HashPassword(password string) (string, string, error) {
+func hashPassword(password string) (string, string, error) {
 	salt := "random-salt-value"
 	saltedPassword := password + salt
 

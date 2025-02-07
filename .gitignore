@@ -1,0 +1,14 @@
+# VS Code
+.vscode/
+
+# Go
+/vendor/
+*.test
+*.out
+
+# Logs
+*.log
+logs/
+
+# Configuração de ambiente
+.env
