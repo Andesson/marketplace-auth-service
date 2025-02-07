@@ -8,7 +8,7 @@ func errParamIsRequired(name, typ string) error {
 
 type CreateUserRequest struct {
 	Email    string `json:"email"`
-	FullName string `json:"full_name"`
+	FullName string `json:"name"`
 	Password string `json:"password"`
 }
 
