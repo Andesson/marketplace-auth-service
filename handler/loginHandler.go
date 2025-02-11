@@ -32,7 +32,7 @@ func Logon(ctx *gin.Context) {
 	}
 
 	var authCredential model.AuthCredential
-	if err := db.First(&authCredential, "user_id = ", user.ID).Error; err != nil {
+	if err := db.Where("user_id = ?", user.ID).First(&authCredential).Error; err != nil {
 		logger.Errorf("❌ Erro ao buscar usuário: %v", err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Erro interno"})
 		return
