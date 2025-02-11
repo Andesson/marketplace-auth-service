@@ -22,7 +22,7 @@ func Init() error {
 	return nil
 }
 
-func GetPostgree() *gorm.DB {
+func GetPostgres() *gorm.DB {
 	return db
 }
 

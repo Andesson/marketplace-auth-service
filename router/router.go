@@ -15,5 +15,5 @@ func Initialize() {
 		AllowCredentials: true,
 	}))
 	initializeRoutes(router)
-	router.Run()
+	router.Run(":8080")
 }

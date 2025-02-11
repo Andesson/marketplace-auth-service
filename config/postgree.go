@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 	"log"
+	"os"
 
 	migrations "github.com/Andesson/marketplace-auth-service/database"
 	"gorm.io/driver/postgres"
@@ -11,7 +12,14 @@ import (
 
 func InitializePostgree() (*gorm.DB, error) {
 	logger := GetLogger("postgree")
-	dsn := "host=localhost user=user password=123 dbname=auth_db port=5432 sslmode=disable"
+	host := os.Getenv("host")
+	user := os.Getenv("user")
+	password := os.Getenv("password")
+	dbname := os.Getenv("dbname")
+	port := os.Getenv("port")
+	sslmode := os.Getenv("sslmode")
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s",
+		host, user, password, dbname, port, sslmode)
 	fmt.Println("🔄 Tentando conectar ao banco de dados...")
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {

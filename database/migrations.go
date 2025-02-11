@@ -6,7 +6,7 @@ import (
 )
 
 func RunMigrations(db *gorm.DB) error {
-	err := db.AutoMigrate(&schemas.Users{}, &schemas.AuthCredential{})
+	err := db.AutoMigrate(&schemas.Users{}, &schemas.AuthCredential{}, &schemas.Sessions{}, &schemas.AuthProviders{})
 	if err != nil {
 		return err
 	}

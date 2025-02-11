@@ -12,7 +12,7 @@ type CreateUserRequest struct {
 	Password string `json:"password"`
 }
 
-func (r *CreateUserRequest) Validate() error {
+func (r *CreateUserRequest) ValidateRequestSignup() error {
 	if r.Email == "" && r.FullName == "" {
 		return fmt.Errorf("request body is empty or malformed")
 	}
@@ -26,4 +26,9 @@ func (r *CreateUserRequest) Validate() error {
 		return errParamIsRequired("password", "string")
 	}
 	return nil
+}
+
+type CreateLoginRequest struct {
+	Email    string `json:"email" binding:"required"`
+	Password string `json:"password" binding:"required"`
 }

@@ -6,15 +6,16 @@ import (
 	"github.com/google/uuid"
 )
 
-type User struct {
+type Session struct {
 	ID        uuid.UUID
-	Email     string
-	FullName  string
+	UserID    uuid.UUID
+	Token     string
+	ExpiresAt time.Time
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt *time.Time
 }
 
-func (u *User) SetID(id uuid.UUID) {
+func (u *Session) SetID(id uuid.UUID) {
 	u.ID = id
 }

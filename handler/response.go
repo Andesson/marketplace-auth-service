@@ -30,3 +30,7 @@ func sendCreatedSucess(ctx *gin.Context, op string, data interface{}) {
 		"data":    data,
 	})
 }
+
+type LoginResponse struct {
+	Token string `json:"token"`
+}

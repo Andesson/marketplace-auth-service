@@ -12,5 +12,5 @@ var (
 
 func InitializeHandler() {
 	logger = config.GetLogger("handler")
-	db = config.GetPostgree()
+	db = config.GetPostgres()
 }

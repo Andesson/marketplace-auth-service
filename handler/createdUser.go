@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/Andesson/marketplace-auth-service/dto"
-	"github.com/Andesson/marketplace-auth-service/hook"
 	"github.com/Andesson/marketplace-auth-service/model"
+	"github.com/Andesson/marketplace-auth-service/utils"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
@@ -22,9 +22,16 @@ func CreateUserHandler(ctx *gin.Context) {
 	}
 	logger.Infof("✅ Requisição validada. Email: %s | Nome: %s | Senha: %s", request.Email, request.FullName, request.Password)
 
-	if err := request.Validate(); err != nil {
+	if err := request.ValidateRequestSignup(); err != nil {
 		logger.Errorf("⚠️ Erro de validação: %v", err)
 		sendError(ctx, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	var existingUser model.User
+	if err := db.Where("email = ?", request.Email).First(&existingUser).Error; err == nil {
+		logger.Infof("⚠️ E-mail já cadastrado: %s", request.Email)
+		ctx.JSON(http.StatusConflict, gin.H{"error": "E-mail já cadastrado"})
 		return
 	}
 
@@ -43,7 +50,7 @@ func CreateUserHandler(ctx *gin.Context) {
 	}
 
 	db.Callback().Create().Before("gorm:create").Register("before_create", func(db *gorm.DB) {
-		if err := hook.BeforeCreate(db); err != nil {
+		if err := utils.BeforeCreate(db); err != nil {
 			logger.Errorf("❌ Erro no hook BeforeCreate: %v", err)
 		}
 	})
@@ -81,7 +88,10 @@ func CreateUserHandler(ctx *gin.Context) {
 }
 
 func hashPassword(password string) (string, string, error) {
-	salt := "random-salt-value"
+	salt, err := utils.GenerateRandomSalt(20)
+	if err != nil {
+		return "", "", err
+	}
 	saltedPassword := password + salt
 
 	hash, err := bcrypt.GenerateFromPassword([]byte(saltedPassword), bcrypt.DefaultCost)
