@@ -6,7 +6,6 @@ import (
 
 	"github.com/Andesson/marketplace-auth-service/config"
 	"github.com/Andesson/marketplace-auth-service/model"
-	"github.com/Andesson/marketplace-auth-service/schemas"
 	"github.com/Andesson/marketplace-auth-service/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
@@ -42,7 +41,7 @@ func GetSession(ctx *gin.Context, tokenString string) {
 		return
 	}
 
-	var session schemas.Sessions
+	var session model.Session
 	err := config.GetPostgres().Where("user_id = ? AND token = ? AND expires_at > ?", userID, tokenString, time.Now()).First(&session).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {

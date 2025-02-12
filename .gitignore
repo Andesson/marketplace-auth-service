@@ -8,7 +8,8 @@
 
 *.exe
 # Logs
-*.log
+
+**/app.log
 logs/
 
 # Configuração de ambiente

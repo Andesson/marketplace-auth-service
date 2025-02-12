@@ -1,7 +1,7 @@
 package migrations
 
 import (
-	"github.com/Andesson/marketplace-auth-service/schemas"
+	"github.com/Andesson/marketplace-auth-service/database/schemas"
 	"gorm.io/gorm"
 )
 
